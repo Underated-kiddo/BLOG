@@ -10,7 +10,7 @@ export default function BlogCard({ blog, onToggle, onDelete }) {
             }`}
         >
             <CardHeader>
-                <CardTitle className={`text-lg font-simibold ${
+                <CardTitle className={`text-lg font-semibold ${
                     blog.posted ? "line-through text-muted-foreground" : ""
                 }`}
             >

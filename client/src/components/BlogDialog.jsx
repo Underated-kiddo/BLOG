@@ -13,6 +13,11 @@ export default function BlogDialog({ onSubmit }) {
     const { categories, loading: catLoading, error: catError } = useCategories();
 
     const handleCreate = () => {
+        if (!title.trim() || !description.trim() || !category) {
+        alert("Please fill in all required fields, including category.");
+        return;
+    }
+
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
@@ -20,6 +25,7 @@ export default function BlogDialog({ onSubmit }) {
         if (featuredImage) {
             formData.append("featuredImage", featuredImage);
         }
+        
         onSubmit(formData);
         setTitle("");
         setDescription("");
@@ -51,7 +57,7 @@ export default function BlogDialog({ onSubmit }) {
                     onChange={e => setCategory(e.target.value)}
                     disabled={catLoading}
                 >
-                    <option value="">{catLoading ? "Loading categories..." : "Select category"}</option>
+                    <option value="" disabled>{catLoading ? "Loading categories..." : "Select category"}</option>
                     {categories.map(cat => (
                         <option key={cat._id} value={cat._id}>{cat.name}</option>
                     ))}
@@ -61,9 +67,15 @@ export default function BlogDialog({ onSubmit }) {
                 <input
                     type="file"
                     accept="image/*"
-                    className="mt-2"
+                    id="featured-image-upload"
+                    style={{ display: 'none' }}
                     onChange={e => setFeaturedImage(e.target.files[0])}
                 />
+                <label htmlFor="featured-image-upload">
+                    <Button type="button" className="mt-2 w-full">
+                        {featuredImage ? featuredImage.name : 'Choose Image'}
+                    </Button>
+                </label>
                 <DialogFooter className="mt-4">
                     <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>

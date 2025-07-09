@@ -9,14 +9,15 @@ import {Link } from  "react-router-dom";
 export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("");
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     
     const handleSignup = async () =>  {
-        if(!email || !password ) return alert("All fields required");
+        if(!email || !password || !role) return alert("All fields required");
         setLoading(true);
         try {
-            const res = await API.post("/auth/signup", {email,password});
+            const res = await API.post("/auth/signup", {email, password, role});
             localStorage.setItem("token",res.data.token);
             navigate("/dashboard");
         } catch (err) {
@@ -34,17 +35,44 @@ export default function Signup() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <Input 
-                    type="email"
-                    placeholder="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
+                        type="email"
+                        placeholder="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
                     />
                     <Input 
-                    type="password"
-                    placeholder="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
+                        type="password"
+                        placeholder="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
                     />
+                    <div className="flex flex-col space-y-2">
+                        <label className="font-medium">Select Role:</label>
+                        <div className="flex space-x-4">
+                            <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="Admin"
+                                    checked={role === "Admin"}
+                                    onChange={() => setRole("Admin")}
+                                    className="mr-2"
+                                />
+                                Admin
+                            </label>
+                            <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="Blogger"
+                                    checked={role === "Blogger"}
+                                    onChange={() => setRole("Blogger")}
+                                    className="mr-2"
+                                />
+                                Blogger
+                            </label>
+                        </div>
+                    </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
                     <Button onClick={handleSignup} disabled={loading} className="w-full">

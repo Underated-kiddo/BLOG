@@ -44,7 +44,7 @@ export default function Dashboard() {
         const optimisticBlog = { _id: tempId, posted: false };
         setBlogs(prev => [optimisticBlog, ...prev]);
         try {
-            const res = await API.post("/blogs", formData, {
+            const res = await API.post("/posts", formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setBlogs(prev => prev.map(b => b._id === tempId ? res.data : b));
@@ -56,13 +56,13 @@ export default function Dashboard() {
     };
 
     const toggleBlog = async (id) =>{
-        const blog = blogs.find(b => b.id ===id);
-        const res = await API.put(`/blogs/${id}`, {completed: !blog.completed});
+        const blog = blogs.find(b => b._id ===id);
+        const res = await API.put(`/posts/${id}`, {completed: !blog.completed});
         setBlogs(prev => prev.map(b => (b._id === id ? res.data : b)));
     };
 
     const deleteBlog = async (id) => {
-        await API.delete(`/blogs/${id}`);
+        await API.delete(`/posts/${id}`);
         setBlogs(prev => prev.filter(b => b._id !== id));
         toast ("Blog deleted");
     };
