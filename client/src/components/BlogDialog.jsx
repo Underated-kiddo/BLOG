@@ -9,13 +9,22 @@ export default function BlogDialog({ onSubmit }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
+    const [featuredImage, setFeaturedImage] = useState(null);
     const { categories, loading: catLoading, error: catError } = useCategories();
 
     const handleCreate = () => {
-        onSubmit({ title, description, category });
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("category", category);
+        if (featuredImage) {
+            formData.append("featuredImage", featuredImage);
+        }
+        onSubmit(formData);
         setTitle("");
         setDescription("");
         setCategory("");
+        setFeaturedImage(null);
     };
 
     return (
@@ -49,6 +58,12 @@ export default function BlogDialog({ onSubmit }) {
                 </select>
                 {catError && <div className="text-red-500 text-sm mt-1">{catError}</div>}
 
+                <input
+                    type="file"
+                    accept="image/*"
+                    className="mt-2"
+                    onChange={e => setFeaturedImage(e.target.files[0])}
+                />
                 <DialogFooter className="mt-4">
                     <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>

@@ -6,12 +6,15 @@ const connectDB = require("./config/db");
 const app = express();
 connectDB();
 
+
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 app.use("/api/auth", require('./routes/authRoutes'));
 app.use("/api", require('./routes/blogRoutes'));
 app.use("/api", require('./routes/categoryRoutes'));
+app.use("/api", require('./routes/commentRoutes'));
 
 // Error handling middleware 
 const errorHandler = require('./middleware/errorHandler');

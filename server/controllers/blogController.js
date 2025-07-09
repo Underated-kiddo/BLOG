@@ -1,10 +1,40 @@
 const Blog = require("../models/blog");
 
 
-// GET /api/posts - Get all blog posts
+// GET /api/posts - Get all blog posts (paginated, searchable, filterable)
 exports.getPosts = async (req, res) => {
-    const posts = await Blog.find().populate("owner", "email").populate("category", "name");
-    res.json(posts);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
+
+    // Search and filter
+    const query = {};
+    if (req.query.search) {
+        query.$or = [
+            { title: { $regex: req.query.search, $options: "i" } },
+            { description: { $regex: req.query.search, $options: "i" } }
+        ];
+    }
+    if (req.query.category) {
+        query.category = req.query.category;
+    }
+
+    const [posts, total] = await Promise.all([
+        Blog.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .populate("owner", "email")
+            .populate("category", "name"),
+        Blog.countDocuments(query)
+    ]);
+
+    res.json({
+        posts,
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+    });
 };
 
 // GET /api/posts/:id - Get a specific blog post
@@ -16,7 +46,15 @@ exports.getPostById = async (req, res) => {
 
 // POST /api/posts - Create a new blog post
 exports.createPost = async (req, res) => {
-    const blog = await Blog.create({ ...req.body, owner: req.user.id });
+    let featuredImage = undefined;
+    if (req.file) {
+        featuredImage = `/uploads/${req.file.filename}`;
+    }
+    const blog = await Blog.create({
+        ...req.body,
+        owner: req.user.id,
+        featuredImage
+    });
     await blog.populate("owner", "email");
     await blog.populate("category", "name");
     res.status(201).json(blog);
