@@ -87,8 +87,8 @@ PORT=5000
 ---
 
 ## Screenshots
+![alt text](<Screenshot 2025-07-09 170659.png>) ![alt text](<Screenshot 2025-07-09 170647.png>) ![alt text](<Screenshot 2025-07-09 170632.png>) ![alt text](<Screenshot 2025-07-09 142414.png>) ![alt text](<Screenshot 2025-07-09 142331.png>) ![alt text](<Screenshot 2025-07-09 142238.png>) ![alt text](<Screenshot 2025-07-09 142218.png>)
 
-<!-- Add screenshots here -->
 
 ---
 

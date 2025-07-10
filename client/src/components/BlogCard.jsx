@@ -35,7 +35,7 @@ export default function BlogCard({ blog, onToggle, onDelete }) {
                 <Button
                 size="icon"
                 variant="destructive"
-                nClick={() => onDelete(blog._id)}
+                onClick={() => onDelete(blog._id)}
                 >
                     <TrashIcon className="h-5 w-5"/>
                 </Button>
